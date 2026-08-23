@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MavenFlix Analytics - Ultimate Report</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #0f172a; color: #f8fafc; }
+        .card { background-color: #1e293b; border: 1px solid #334155; border-radius: 12px; }
+    </style>
+</head>
+<body class="p-4 md:p-8 max-w-5xl mx-auto">
+
+    <!-- Header -->
+    <header class="mb-6 text-center md:text-left border-b border-slate-700 pb-4">
+        <div class="flex items-center justify-between flex-wrap gap-2">
+            <h1 class="text-2xl md:text-3xl font-bold text-red-500">🎬 MavenFlix Analytics</h1>
+            <span class="text-xs bg-emerald-500/20 text-emerald-400 px-2.5 py-1 rounded-full font-semibold border border-emerald-500/30">Paid Subscriptions Only</span>
+        </div>
+        <p class="text-slate-400 text-sm mt-1">Streaming Video Subscriptions Analytics (Customer-Aggregated & Rigorous)</p>
+    </header>
+
+    <!-- Key Metrics Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+        <div class="card p-4 text-center">
+            <span class="text-xs text-slate-400 uppercase font-semibold">Unique Paid Customers</span>
+            <p class="text-2xl font-extrabold text-white mt-1">2,744</p>
+            <span class="text-[10px] text-slate-500">(2,936 total subscription records)</span>
+        </div>
+        <div class="card p-4 text-center">
+            <span class="text-xs text-slate-400 uppercase font-semibold">Subscribed 5+ Months</span>
+            <p class="text-2xl font-extrabold text-emerald-400 mt-1">23.99%</p>
+            <span class="text-[10px] text-slate-400">(479 / 1,997 eligible unique customers)</span>
+        </div>
+        <div class="card p-4 text-center">
+            <span class="text-xs text-slate-400 uppercase font-semibold">Peak Month</span>
+            <p class="text-2xl font-extrabold text-indigo-400 mt-1">2023-07</p>
+            <span class="text-[10px] text-slate-400">(293 new paid subscribers)</span>
+        </div>
+    </div>
+
+    <!-- Question 1: Trend Analysis -->
+    <section class="card p-5 mb-6">
+        <h2 class="text-lg font-semibold text-red-400 mb-2">1. How have MavenFlix subscriptions trended over time?</h2>
+        <p class="text-slate-300 text-sm mb-4">
+            Paid subscriptions dipped slightly in late 2022 before experiencing strong, sustained growth to an all-time peak in 
+            <strong>2023-07</strong> with <strong>293 new paid subscribers</strong>. The drop in late 2023-09 reflects data extraction cutoff.
+        </p>
+        <div class="relative w-full h-64">
+            <canvas id="trendChart"></canvas>
+        </div>
+    </section>
+
+    <!-- Question 2: 5+ Months Retention -->
+    <section class="card p-5 mb-6">
+        <h2 class="text-lg font-semibold text-emerald-400 mb-2">2. What percentage of customers subscribed for 5+ months?</h2>
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="text-sm text-slate-300">
+                <p class="mb-2">
+                    Among <i>eligible unique customers</i> (joined on or before May 2023 with full 5-month observation window), 
+                    <strong class="text-emerald-400 text-xl">23.99%</strong> (479 out of 1,997) maintained their subscription for <strong>5 months or longer</strong> across their lifetime.
+                </p>
+                <p class="text-xs text-slate-400 border-l-2 border-emerald-500 pl-2 mt-2">
+                    Across all total customer accounts (including brand-new accounts created after May 2023), the unadjusted rate is <strong>17.46%</strong> (479 / 2,744).
+                </p>
+            </div>
+            <div class="w-36 h-36 flex-shrink-0 flex flex-col items-center">
+                <canvas id="gaugeChart"></canvas>
+                <span class="text-[10px] text-slate-400 mt-1 font-semibold">Eligible Customers Rate</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Question 3: Retention Analysis -->
+    <section class="card p-5 mb-6">
+        <h2 class="text-lg font-semibold text-indigo-400 mb-2">3. What month has the highest and lowest subscriber retention?</h2>
+        <p class="text-xs text-slate-400 mb-3">
+            *Evaluated on mature Month-1 Retention (≥ 30 days active). Immature cohorts (late August & September 2023) are excluded from ranking to prevent censoring bias.
+        </p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700">
+                <span class="text-xs text-emerald-400 font-bold uppercase">Highest Retention Month (M1)</span>
+                <p class="text-xl font-bold mt-1 text-white">2023-01</p>
+                <p class="text-xs text-slate-400">Month-1 Retention Rate: <strong class="text-emerald-400">82.88%</strong></p>
+            </div>
+            <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700">
+                <span class="text-xs text-rose-400 font-bold uppercase">Lowest Retention Month (M1)</span>
+                <p class="text-xl font-bold mt-1 text-white">2023-02</p>
+                <p class="text-xs text-slate-400">Month-1 Retention Rate: <strong class="text-rose-400">75.85%</strong></p>
+            </div>
+        </div>
+
+        <p class="text-xs text-slate-300 bg-slate-900/40 p-2.5 rounded border border-slate-700/50 mb-4">
+            💡 <strong>Analytical Insight:</strong> Retention is remarkably consistent across all mature cohorts, varying within a narrow band between <strong>75.85%</strong> and <strong>82.88%</strong>.
+        </p>
+
+        <!-- Mature Cohorts Bar Chart -->
+        <div class="relative w-full h-64 mb-6">
+            <canvas id="retentionChart"></canvas>
+        </div>
+
+        <!-- Full Cohort Retention Heatmap Matrix Table -->
+        <h3 class="text-sm font-semibold text-slate-300 mb-2">Full Cohort Retention Matrix (M0 - M12)</h3>
+        
+        <div class="overflow-x-auto rounded-lg border border-slate-700">
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-slate-900/80 border-b border-slate-700">
+                    <tr>
+                        <th class="px-2 py-1.5 text-xs text-slate-300 font-semibold">Cohort</th>
+                        <th class="px-2 py-1.5 text-xs text-slate-300 font-semibold text-center border-r border-slate-700/50">Size</th>
+                        <th class='px-2 py-1.5 text-[11px] text-slate-300 font-semibold text-center'>M0</th><th class='px-2 py-1.5 text-[11px] text-slate-300 font-semibold text-center'>M1</th><th class='px-2 py-1.5 text-[11px] text-slate-300 font-semibold text-center'>M2</th><th class='px-2 py-1.5 text-[11px] text-slate-300 font-semibold text-center'>M3</th><th class='px-2 py-1.5 text-[11px] text-slate-300 font-semibold text-center'>M4</th><th class='px-2 py-1.5 text-[11px] text-slate-300 font-semibold text-center'>M5</th><th class='px-2 py-1.5 text-[11px] text-slate-300 font-semibold text-center'>M6</th><th class='px-2 py-1.5 text-[11px] text-slate-300 font-semibold text-center'>M7</th><th class='px-2 py-1.5 text-[11px] text-slate-300 font-semibold text-center'>M8</th><th class='px-2 py-1.5 text-[11px] text-slate-300 font-semibold text-center'>M9</th><th class='px-2 py-1.5 text-[11px] text-slate-300 font-semibold text-center'>M10</th><th class='px-2 py-1.5 text-[11px] text-slate-300 font-semibold text-center'>M11</th><th class='px-2 py-1.5 text-[11px] text-slate-300 font-semibold text-center'>M12</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class='border-b border-slate-800/60 hover:bg-slate-800/40'><td class='px-2 py-1.5 text-xs font-mono font-bold text-slate-200 border-r border-slate-700/50'>2022-09</td><td class='px-2 py-1.5 text-xs text-slate-400 text-center border-r border-slate-700/50'>210</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-emerald-500/30 text-emerald-300'>100.0%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-indigo-500/30 text-indigo-300'>74.3%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-amber-500/30 text-amber-300'>50.0%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-rose-500/30 text-rose-300'>39.5%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-rose-500/30 text-rose-300'>31.4%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-rose-500/30 text-rose-300'>29.5%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-rose-500/30 text-rose-300'>23.8%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-rose-500/30 text-rose-300'>18.6%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-rose-500/30 text-rose-300'>15.7%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-rose-500/30 text-rose-300'>12.9%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-rose-500/30 text-rose-300'>11.4%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-rose-500/30 text-rose-300'>11.0%</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td></tr><tr class='border-b border-slate-800/60 hover:bg-slate-800/40'><td class='px-2 py-1.5 text-xs font-mono font-bold text-slate-200 border-r border-slate-700/50'>2022-10</td><td class='px-2 py-1.5 text-xs text-slate-400 text-center border-r border-slate-700/50'>189</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-emerald-500/30 text-emerald-300'>100.0%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-indigo-500/30 text-indigo-300'>78.3%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-amber-500/30 text-amber-300'>56.1%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-amber-500/30 text-amber-300'>43.9%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-rose-500/30 text-rose-300'>35.4%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-rose-500/30 text-rose-300'>28.6%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-rose-500/30 text-rose-300'>23.8%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-rose-500/30 text-rose-300'>21.2%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-rose-500/30 text-rose-300'>18.0%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-rose-500/30 text-rose-300'>15.3%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-rose-500/30 text-rose-300'>13.8%</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td></tr><tr class='border-b border-slate-800/60 hover:bg-slate-800/40'><td class='px-2 py-1.5 text-xs font-mono font-bold text-slate-200 border-r border-slate-700/50'>2022-11</td><td class='px-2 py-1.5 text-xs text-slate-400 text-center border-r border-slate-700/50'>177</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-emerald-500/30 text-emerald-300'>100.0%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-indigo-500/30 text-indigo-300'>78.0%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-amber-500/30 text-amber-300'>58.8%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-amber-500/30 text-amber-300'>41.2%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-rose-500/30 text-rose-300'>28.8%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-rose-500/30 text-rose-300'>21.5%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-rose-500/30 text-rose-300'>18.6%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-rose-500/30 text-rose-300'>17.5%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-rose-500/30 text-rose-300'>16.9%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-rose-500/30 text-rose-300'>14.1%</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td></tr><tr class='border-b border-slate-800/60 hover:bg-slate-800/40'><td class='px-2 py-1.5 text-xs font-mono font-bold text-slate-200 border-r border-slate-700/50'>2022-12</td><td class='px-2 py-1.5 text-xs text-slate-400 text-center border-r border-slate-700/50'>220</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-emerald-500/30 text-emerald-300'>100.0%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-indigo-500/30 text-indigo-300'>79.5%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-amber-500/30 text-amber-300'>58.2%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-amber-500/30 text-amber-300'>40.9%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-rose-500/30 text-rose-300'>34.1%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-rose-500/30 text-rose-300'>27.7%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-rose-500/30 text-rose-300'>25.5%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-rose-500/30 text-rose-300'>21.4%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-rose-500/30 text-rose-300'>19.1%</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td></tr><tr class='border-b border-slate-800/60 hover:bg-slate-800/40'><td class='px-2 py-1.5 text-xs font-mono font-bold text-slate-200 border-r border-slate-700/50'>2023-01</td><td class='px-2 py-1.5 text-xs text-slate-400 text-center border-r border-slate-700/50'>257</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-emerald-500/30 text-emerald-300'>100.0%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-emerald-500/30 text-emerald-300'>81.3%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-amber-500/30 text-amber-300'>58.0%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-amber-500/30 text-amber-300'>44.4%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-rose-500/30 text-rose-300'>35.8%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-rose-500/30 text-rose-300'>30.7%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-rose-500/30 text-rose-300'>25.7%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-rose-500/30 text-rose-300'>22.6%</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td></tr><tr class='border-b border-slate-800/60 hover:bg-slate-800/40'><td class='px-2 py-1.5 text-xs font-mono font-bold text-slate-200 border-r border-slate-700/50'>2023-02</td><td class='px-2 py-1.5 text-xs text-slate-400 text-center border-r border-slate-700/50'>265</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-emerald-500/30 text-emerald-300'>100.0%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-indigo-500/30 text-indigo-300'>75.8%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-amber-500/30 text-amber-300'>53.2%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-amber-500/30 text-amber-300'>43.8%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-rose-500/30 text-rose-300'>33.6%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-rose-500/30 text-rose-300'>27.5%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-rose-500/30 text-rose-300'>24.5%</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td></tr><tr class='border-b border-slate-800/60 hover:bg-slate-800/40'><td class='px-2 py-1.5 text-xs font-mono font-bold text-slate-200 border-r border-slate-700/50'>2023-03</td><td class='px-2 py-1.5 text-xs text-slate-400 text-center border-r border-slate-700/50'>251</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-emerald-500/30 text-emerald-300'>100.0%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-indigo-500/30 text-indigo-300'>77.3%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-amber-500/30 text-amber-300'>57.8%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-amber-500/30 text-amber-300'>40.2%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-rose-500/30 text-rose-300'>33.9%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-rose-500/30 text-rose-300'>29.1%</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td></tr><tr class='border-b border-slate-800/60 hover:bg-slate-800/40'><td class='px-2 py-1.5 text-xs font-mono font-bold text-slate-200 border-r border-slate-700/50'>2023-04</td><td class='px-2 py-1.5 text-xs text-slate-400 text-center border-r border-slate-700/50'>209</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-emerald-500/30 text-emerald-300'>100.0%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-indigo-500/30 text-indigo-300'>75.6%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-amber-500/30 text-amber-300'>56.5%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-amber-500/30 text-amber-300'>44.0%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-rose-500/30 text-rose-300'>39.7%</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td></tr><tr class='border-b border-slate-800/60 hover:bg-slate-800/40'><td class='px-2 py-1.5 text-xs font-mono font-bold text-slate-200 border-r border-slate-700/50'>2023-05</td><td class='px-2 py-1.5 text-xs text-slate-400 text-center border-r border-slate-700/50'>279</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-emerald-500/30 text-emerald-300'>100.0%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-indigo-500/30 text-indigo-300'>78.1%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-amber-500/30 text-amber-300'>55.2%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-amber-500/30 text-amber-300'>44.1%</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td></tr><tr class='border-b border-slate-800/60 hover:bg-slate-800/40'><td class='px-2 py-1.5 text-xs font-mono font-bold text-slate-200 border-r border-slate-700/50'>2023-06</td><td class='px-2 py-1.5 text-xs text-slate-400 text-center border-r border-slate-700/50'>262</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-emerald-500/30 text-emerald-300'>100.0%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-indigo-500/30 text-indigo-300'>78.2%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-amber-500/30 text-amber-300'>59.9%</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td></tr><tr class='border-b border-slate-800/60 hover:bg-slate-800/40'><td class='px-2 py-1.5 text-xs font-mono font-bold text-slate-200 border-r border-slate-700/50'>2023-07</td><td class='px-2 py-1.5 text-xs text-slate-400 text-center border-r border-slate-700/50'>293</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-emerald-500/30 text-emerald-300'>100.0%</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-indigo-500/30 text-indigo-300'>79.5%</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td></tr><tr class='border-b border-slate-800/60 hover:bg-slate-800/40'><td class='px-2 py-1.5 text-xs font-mono font-bold text-slate-200 border-r border-slate-700/50'>2023-08</td><td class='px-2 py-1.5 text-xs text-slate-400 text-center border-r border-slate-700/50'>258</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-emerald-500/30 text-emerald-300'>100.0%</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td></tr><tr class='border-b border-slate-800/60 hover:bg-slate-800/40'><td class='px-2 py-1.5 text-xs font-mono font-bold text-slate-200 border-r border-slate-700/50'>2023-09</td><td class='px-2 py-1.5 text-xs text-slate-400 text-center border-r border-slate-700/50'>66</td><td class='px-2 py-1.5 text-[11px] font-semibold text-center bg-emerald-500/30 text-emerald-300'>100.0%</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td><td class='px-2 py-1.5 text-[10px] text-slate-600 text-center'>-</td></tr>
+                </tbody>
+            </table>
+        </div>
+        
+    </section>
+
+    <footer class="text-center text-xs text-slate-500 my-6">
+        Generated automatically from MavenFlix Dataset | Customer-Aggregated & Rigorous Analytics
+    </footer>
+
+    <!-- Chart.js Scripts -->
+    <script>
+        // Trend Chart (Line)
+        new Chart(document.getElementById('trendChart'), {
+            type: 'line',
+            data: {
+                labels: ["2022-09", "2022-10", "2022-11", "2022-12", "2023-01", "2023-02", "2023-03", "2023-04", "2023-05", "2023-06", "2023-07", "2023-08", "2023-09"],
+                datasets: [{
+                    label: 'Paid Subscribers',
+                    data: [210, 189, 177, 220, 257, 265, 251, 209, 279, 262, 293, 258, 66],
+                    borderColor: '#ef4444',
+                    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { ticks: { color: '#94a3b8', font: { size: 10 } } },
+                    y: { ticks: { color: '#94a3b8', font: { size: 10 } } }
+                }
+            }
+        });
+
+        // Gauge Chart (Doughnut)
+        new Chart(document.getElementById('gaugeChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Eligible 5+ Months', 'Dropped < 5 Months'],
+                datasets: [{
+                    data: [23.99, 76.01],
+                    backgroundColor: ['#34d399', '#334155'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                cutout: '75%'
+            }
+        });
+
+        // Retention Chart (Bar for Mature Cohorts Only)
+        const matureLabels = ["2022-09", "2022-10", "2022-11", "2022-12", "2023-01", "2023-02", "2023-03", "2023-04", "2023-05", "2023-06", "2023-07"];
+        const matureRates = [77.14, 79.89, 80.79, 81.36, 82.88, 75.85, 80.08, 77.51, 79.57, 80.92, 80.55];
+        const highestMonthStr = "2023-01";
+        const lowestMonthStr = "2023-02";
+
+        const barColors = matureLabels.map(label => {
+            if (label === highestMonthStr) return '#34d399'; // Emerald
+            if (label === lowestMonthStr) return '#f43f5e'; // Rose
+            return '#818cf8'; // Indigo
+        });
+
+        new Chart(document.getElementById('retentionChart'), {
+            type: 'bar',
+            data: {
+                labels: matureLabels,
+                datasets: [{
+                    label: 'Month-1 Retention Rate (%)',
+                    data: matureRates,
+                    backgroundColor: barColors,
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return ' Month-1 Retention Rate: ' + context.parsed.y + '%';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: { ticks: { color: '#94a3b8', font: { size: 10 } } },
+                    y: { ticks: { color: '#94a3b8', font: { size: 10 } }, max: 100 }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
