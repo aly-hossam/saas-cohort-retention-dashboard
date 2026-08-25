@@ -5,6 +5,7 @@
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 ![Chart.js](https://img.shields.io/badge/Chart.js-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white)
 ![Analysis Type](https://img.shields.io/badge/Analysis-SaaS_Cohort_Retention-blueviolet?style=for-the-badge)
+[![Live Interactive Dashboard](https://img.shields.io/badge/🚀_Live_Demo-View_Interactive_Dashboard-blueviolet?style=for-the-badge&logo=githubpages&logoColor=white)](https://aly-hossam.github.io/saas-cohort-retention-dashboard/)
 
 An end-to-end Python data pipeline and interactive analytics dashboard for **MavenFlix**, a fictitious video streaming platform. This project handles automated data extraction, exploratory data profiling, rigorous data cleaning (fixing right-censoring bias), and generates a mobile-optimized **HTML Dashboard** featuring dynamic Chart.js visualizations and a full **Cohort Retention Heatmap Matrix ($M_0 - M_{12}$)**.
 
